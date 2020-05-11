@@ -1,58 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, { useEffect } from 'react';
+import HomePage from './pages/homePage/HomePage';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
+import Shop from './pages/shop/Shop';
+import Header from './components/header/Header';
+import SignInSignUpPage from './pages/signIn-signUp/SignInSignUpPage';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_CURRENT_USER } from './redux/userSlice';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
-  );
-}
+import Checkout from './pages/checkout/Checkout';
+
+const App = () => {
+	const dispatch = useDispatch();
+	const { currentUser } = useSelector((state) => state.user);
+	let unsubscribeFromAuth = null;
+	useEffect(() => {
+		unsubscribeFromAuth = auth.onAuthStateChanged(async function (user) {
+			if (user) {
+				const docRef = await createUserProfileDocument(user);
+				docRef.onSnapshot((snap) => {
+					dispatch(
+						SET_CURRENT_USER({
+							id: snap.id,
+							...snap.data(),
+						})
+					);
+				});
+			} else {
+				dispatch(SET_CURRENT_USER(user));
+			}
+		});
+		return () => {
+			unsubscribeFromAuth();
+		};
+	}, [dispatch]);
+
+	return (
+		<BrowserRouter>
+			<Header />
+
+			<Switch>
+				<Route exact path='/' component={HomePage} />
+				<Route path='/shop' component={Shop} />
+
+				<Route exact path='/checkout' component={Checkout} />
+				{currentUser ? (
+					<Redirect to='/' />
+				) : (
+					<Route exact path='/signin' component={SignInSignUpPage} />
+				)}
+
+				<HomePage />
+			</Switch>
+		</BrowserRouter>
+	);
+};
 
 export default App;
