@@ -3,8 +3,7 @@ import { useState } from 'react';
 import FormInput from '../formInput/FormInput';
 import CustomButton from '../customButton/CustomButton';
 import './SignIn.scss';
-import { signInWithGoogle } from '../../firebase/firebase.utils';
-import { auth } from '../../firebase/firebase.utils';
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
 
 const SignIn = () => {
 	const [formData, setFormData] = useState({

@@ -19,9 +19,9 @@ firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = async () =>
-	await auth.signInWithPopup(provider);
+	await auth.signInWithPopup(googleProvider);
 
 export default firebase;
 
@@ -60,24 +60,3 @@ export const addcollectionAndDocuments = async (
 	return await batch.commit();
 };
 export const getref = (collectionKey) => firestore.collection(collectionKey);
-
-// firebase.auth().onAuthStateChanged(function (user) {
-// 	if (user) {
-// 		// User is signed in.
-// 		console.log(user);
-
-// 		var displayName = user.displayName;
-// 		var email = user.email;
-// 		var emailVerified = user.emailVerified;
-// 		var photoURL = user.photoURL;
-// 		var isAnonymous = user.isAnonymous;
-// 		var uid = user.uid;
-// 		var providerData = user.providerData;
-// 		// ...
-// 	} else {
-// 		console.log('userloged out');
-
-// 		// User is signed out.
-// 		// ...
-// 	}
-// });

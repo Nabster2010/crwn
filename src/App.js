@@ -14,9 +14,9 @@ import Checkout from './pages/checkout/Checkout';
 const App = () => {
 	const dispatch = useDispatch();
 	const { currentUser } = useSelector((state) => state.user);
-	let unsubscribeFromAuth = null;
+
 	useEffect(() => {
-		unsubscribeFromAuth = auth.onAuthStateChanged(async function (user) {
+		let unsubscribeFromAuth = auth.onAuthStateChanged(async function (user) {
 			if (user) {
 				const docRef = await createUserProfileDocument(user);
 				docRef.onSnapshot((snap) => {
