@@ -5,11 +5,18 @@
 	height: 350px;
 	align-items: center;
 	position: relative;
+
 	button {
 		position: absolute;
 		top: 255px;
 		opacity: 0.7;
 		display: none;
+		@media screen and (max-width: 800px) {
+			display: block;
+			opacity: 0.9;
+			min-width: unset;
+			padding: 0 10px;
+		}
 	}
 
 	.image {
@@ -45,6 +52,18 @@
 
 		.price {
 			width: 10%;
+		}
+	}
+	@media screen and (max-width: 800px) {
+		width: 40vw;
+		&:hover {
+			cursor: pointer;
+			.image {
+				opacity: unset;
+			}
+			button {
+				opacity: unset;
+			}
 		}
 	}
 }

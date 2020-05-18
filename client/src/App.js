@@ -1,33 +1,40 @@
-import React from 'react';
-import HomePage from './pages/homePage/HomePage';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import './App.css';
-import Shop from './pages/shop/Shop';
+import { GlobalStyles } from './globalStyles/GlobalStyle';
 import Header from './components/header/Header';
-import SignInSignUpPage from './pages/signIn-signUp/SignInSignUpPage';
 import { useSelector } from 'react-redux';
+import Spinner from './components/WithSpinner/Spinner';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
-import Checkout from './pages/checkout/Checkout';
+const SignInSignUpPage = lazy(() =>
+	import('./pages/signIn-signUp/SignInSignUpPage')
+);
+const Shop = lazy(() => import('./pages/shop/Shop'));
+const HomePage = lazy(() => import('./pages/homePage/HomePage'));
+const Checkout = lazy(() => import('./pages/checkout/Checkout'));
 
 const App = () => {
 	const { currentUser } = useSelector((state) => state.user);
 
 	return (
 		<BrowserRouter>
+			<GlobalStyles />
 			<Header />
 
 			<Switch>
-				<Route exact path='/' component={HomePage} />
-				<Route path='/shop' component={Shop} />
+				<ErrorBoundary>
+					<Suspense fallback={<Spinner />}>
+						<Route exact path='/' component={HomePage} />
+						<Route path='/shop' component={Shop} />
 
-				<Route exact path='/checkout' component={Checkout} />
-				{currentUser ? (
-					<Redirect to='/' />
-				) : (
-					<Route exact path='/signin' component={SignInSignUpPage} />
-				)}
-
-				<HomePage />
+						<Route exact path='/checkout' component={Checkout} />
+						{currentUser ? (
+							<Redirect to='/' />
+						) : (
+							<Route exact path='/signin' component={SignInSignUpPage} />
+						)}
+					</Suspense>
+				</ErrorBoundary>
 			</Switch>
 		</BrowserRouter>
 	);
