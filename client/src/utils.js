@@ -11,7 +11,12 @@ export const addItem = (newItem, cartItems) => {
 	}
 };
 
-export const getQuantity = (cartItems) =>
-	cartItems.reduce((total, item) => total + item.quantity, 0);
+export const getQuantity = (cartItems) => {
+	if (cartItems.length) {
+		return cartItems.reduce((total, item) => total + item.quantity, 0);
+	} else {
+		return 0;
+	}
+};
 export const getTotal = (cartItems) =>
 	cartItems.reduce((total, item) => total + item.quantity * item.price, 0);

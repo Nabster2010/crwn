@@ -4,7 +4,7 @@ import {
 	createUserProfileDocument,
 } from '../firebase/firebase.utils';
 import { auth } from 'firebase';
-import { clearCart } from './cartSlice';
+import { clearCart, getCartItemsFireStore } from './cartSlice';
 
 export const userSlice = createSlice({
 	name: 'user',
@@ -60,6 +60,7 @@ export const googleSignin = (history) => async (dispatch) => {
 		const docRef = await createUserProfileDocument(user);
 		const snap = await docRef.get();
 		dispatch(GOOGLE_SIGNIN_SUCCESS({ id: snap.id, ...snap.data() }));
+		dispatch(getCartItemsFireStore());
 	} catch (err) {
 		dispatch(GOOGLE_SIGNIN_FALURE(err.message));
 	}
@@ -90,6 +91,7 @@ export const signinEmailPassword = (credintials) => async (dispatch) => {
 				createdAt: user.createdAt,
 			})
 		);
+		dispatch(getCartItemsFireStore());
 	} catch (err) {
 		console.log(err.message);
 	}

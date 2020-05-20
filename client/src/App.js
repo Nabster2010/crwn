@@ -5,7 +5,6 @@ import Header from './components/header/Header';
 import { useSelector } from 'react-redux';
 import Spinner from './components/WithSpinner/Spinner';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-
 const SignInSignUpPage = lazy(() =>
 	import('./pages/signIn-signUp/SignInSignUpPage')
 );
